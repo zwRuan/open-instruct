@@ -69,6 +69,14 @@ from open_instruct.utils import (
 
 logger = get_logger(__name__)
 
+import debugpy
+try:
+    # 5678 is the default attach port in the VS Code debug configurations. Unless a host and port are specified, host defaults to 127.0.0.1
+    debugpy.listen(("localhost", 16237))
+    print("Waiting for debugger attach")
+    debugpy.wait_for_client()
+except Exception as e:
+    pass
 
 @dataclass
 class FlatArguments:
@@ -337,7 +345,7 @@ class FlatArguments:
         default=0.5,
         metadata={"help": "Weight for load balancing loss if applicable."},
     )
-    push_to_hub: bool = True
+    push_to_hub: bool = False
     """Whether to upload the saved model to huggingface"""
     hf_entity: Optional[str] = None
     """The user or org name of the model repository from the Hugging Face Hub"""
@@ -375,8 +383,8 @@ class FlatArguments:
             or (self.dataset_mixer is not None and self.dataset_mixer_list is not None)
         ):
             raise ValueError("Cannot provide two dataset selection mechanisms.")
-        if self.try_launch_beaker_eval_jobs and not self.push_to_hub:
-            raise ValueError("Cannot launch Beaker evaluation jobs without pushing to the Hub.")
+        # if self.try_launch_beaker_eval_jobs and not self.push_to_hub:
+        #     raise ValueError("Cannot launch Beaker evaluation jobs without pushing to the Hub.")
 
 
 def encode_sft_example(example, tokenizer, max_seq_length):

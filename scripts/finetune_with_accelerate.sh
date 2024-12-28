@@ -1,7 +1,7 @@
-export CUDA_VISIBLE_DEVICES=0,1,2,3
+export CUDA_VISIBLE_DEVICES=1
 
 MODEL_SIZE=7B
-NUM_GPUS=4
+NUM_GPUS=1
 BATCH_SIZE_PER_GPU=1
 TOTAL_BATCH_SIZE=128
 GRADIENT_ACC_STEPS=$(($TOTAL_BATCH_SIZE/$NUM_GPUS/$BATCH_SIZE_PER_GPU))
@@ -16,11 +16,11 @@ accelerate launch \
     --use_deepspeed \
     --deepspeed_config_file configs/ds_configs/stage3_no_offloading_accelerate.conf \
     open_instruct/finetune.py \
-    --model_name_or_path ../hf_llama2_models/${MODEL_SIZE} \
+    --model_name_or_path /data1/rzw/models/Meta-Llama-3-8B-Instruct \
     --use_flash_attn \
-    --tokenizer_name ../hf_llama2_models/${MODEL_SIZE} \
+    --tokenizer_name /data1/rzw/models/Meta-Llama-3-8B-Instruct \
     --use_slow_tokenizer \
-    --train_file data/processed/tulu_v2/tulu_v2_data.jsonl \
+    --train_file /data1/rzw/CODE/open-instruct_old/data/processed/tulu_v2/tulu_v2_filtered_data.jsonl \
     --max_seq_length 8192 \
     --preprocessing_num_workers 128 \
     --per_device_train_batch_size $BATCH_SIZE_PER_GPU \

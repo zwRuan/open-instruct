@@ -170,7 +170,7 @@ def main(args):
 
     em_score = exact_match.compute(predictions=predictions, references=targets, ignore_case=True, ignore_punctuation=True)["exact_match"]
     print(f"Exact match : {em_score}")
-
+    
     predictions = [{
         "question": example["question"],
         "answer": example["answer"],
